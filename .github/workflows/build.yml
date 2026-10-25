@@ -16,19 +16,13 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Info Gradle bawaan
-        run: |
-          gradle --version || true
-          cat gradle/wrapper/gradle-wrapper.properties
+      - name: Buang plugin foojay
+        run: sed -i '/foojay-resolver-convention/d' settings.gradle.kts
 
       - name: Build debug APK
         run: |
-          if ./gradlew assembleDebug --stacktrace; then
-            echo "Build pakai wrapper berhasil"
-          else
-            echo "Wrapper gagal, pakai Gradle bawaan runner"
-            gradle assembleDebug --stacktrace
-          fi
+          gradle --version
+          gradle assembleDebug --stacktrace
           ls app/build/outputs/apk/debug/*.apk
 
       - uses: actions/upload-artifact@v4
