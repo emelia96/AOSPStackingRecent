@@ -16,14 +16,19 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Info Gradle bawaan
+        run: |
+          gradle --version || true
+          cat gradle/wrapper/gradle-wrapper.properties
+
       - name: Build debug APK
         run: |
-          chmod +x gradlew
-          for i in 1 2 3; do
-            ./gradlew assembleDebug --stacktrace && break
-            echo "Build gagal, coba lagi ($i/3)..."
-            sleep 15
-          done
+          if ./gradlew assembleDebug --stacktrace; then
+            echo "Build pakai wrapper berhasil"
+          else
+            echo "Wrapper gagal, pakai Gradle bawaan runner"
+            gradle assembleDebug --stacktrace
+          fi
           ls app/build/outputs/apk/debug/*.apk
 
       - uses: actions/upload-artifact@v4
