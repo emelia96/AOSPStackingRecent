@@ -18,14 +18,13 @@ jobs:
 
       - name: Build debug APK
         run: |
-          yes | sdkmanager --licenses || true
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
-
-      - name: Build debug APK
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
+          for i in 1 2 3; do
+            ./gradlew assembleDebug --stacktrace && break
+            echo "Build gagal, coba lagi ($i/3)..."
+            sleep 15
+          done
+          ls app/build/outputs/apk/debug/*.apk
 
       - uses: actions/upload-artifact@v4
         with:
